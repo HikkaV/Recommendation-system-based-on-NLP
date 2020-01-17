@@ -1,2 +1,2 @@
 # Recommendation-system-based-on-NLP
-Content based recommendation system based on NLP techniques. 
+Content based recommendation system using NLP techniques. 
