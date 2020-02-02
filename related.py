@@ -123,9 +123,9 @@ class Related:
         print('Made matrices')
         ranks = self.cswp(matrix, batch_size, topn, workers)
         print('Computed cosine similarity')
-        self.algorithm_data = pd.read_csv(path_to_actual_data)
+        self.final_data = pd.read_csv(path_to_actual_data)
         print('Loaded data from {} to update with predictions'.format(path_to_actual_data))
-        self.algorithm_data['recs'] = ranks
+        self.final_data['recs'] = ranks
         path = path_to_actual_data.split('.csv')[0] + '_recs' + '.json'
-        self.algorithm_data.to_json(path)
+        self.final_data.to_json(path)
         print('Saved results to {0}'.format(path))

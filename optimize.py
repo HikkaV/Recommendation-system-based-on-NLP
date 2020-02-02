@@ -20,7 +20,7 @@ class Optimize:
     def objective(self, space):
         weights = dict(list(zip(self.fields, space)))
         self.rel_cls.create_related(path_to_actual_data=self.path_to_overall_data, weights_specific=weights)
-        data = self.rel_cls.algorithm_data
+        data = self.rel_cls.final_data
         related_model = RelatedModel(data)
         to_validate, _, __ = prepare_data(path_movies=self.path_movies, path_ratings=self.path_ratings,
                                           min_watched=self.min_watched, min_rating=self.min_ratings)
