@@ -10,7 +10,7 @@ class Related:
     def __init__(self, model_path, path_to_alg):
         self.model = self.load_emb_from_disk(model_path)
         self.algorithm_data = pd.read_csv(path_to_alg)
-        self.algorithm_data.fillna(value='nan',inplace=True)
+        self.algorithm_data.fillna(value='nan', inplace=True)
         self.cv = CountVectorizer(analyzer='word', ngram_range=(1, 1), min_df=0, stop_words='english')
 
     def cv_matrices(self, columns):
@@ -45,14 +45,15 @@ class Related:
         return dict_words
 
     def average(self, dict_words: dict, shape: int, words: list) -> np.array:
-        avg = np.zeros(shape,dtype=np.float32)
-        counter = 0
+        avg = np.zeros(shape, dtype=np.float32)
+        counter = 1
         for w in words:
             try:
                 avg += dict_words[w]
                 counter += 1
             except:
                 pass
+        counter-=1
         avg = avg / counter
         avg = np.nan_to_num(avg)
         return avg
@@ -95,7 +96,7 @@ class Related:
             sim = np.divide(sim, len(list_with_matrices))
             np.apply_along_axis(self.take_top_n, axis=1, arr=sim, **kwargs_numpy_apply)
             start = end
-        return  self.ranks
+        return self.ranks
 
     def _parallel_emb_cosine(self, x):
         i, start_end_points = x
@@ -113,16 +114,18 @@ class Related:
     def sigmoid_log(self, z, denominator=1):
         return 1. / (denominator + np.exp(np.negative(np.log(z))))
 
-    def create_related(self, path_to_actual_data):
+    def create_related(self, path_to_actual_data, weights_specific=None):
         matrix = self.cv_matrices(columns=columns_to_vectorize)
         dict_words = self.create_embs_dict(columns_for_embeddings)
-        matrix = self.embs_matrices(dict_words, columns_for_embeddings, matrix, weights)
+        if not weights_specific:
+            weights_specific = weights
+        matrix = self.embs_matrices(dict_words, columns_for_embeddings, matrix, weights_specific)
         print('Made matrices')
         ranks = self.cswp(matrix, batch_size, topn, workers)
         print('Computed cosine similarity')
         self.algorithm_data = pd.read_csv(path_to_actual_data)
         print('Loaded data from {} to update with predictions'.format(path_to_actual_data))
         self.algorithm_data['recs'] = ranks
-        path = path_to_actual_data.split('.csv')[0]+'_recs'+'.json'
+        path = path_to_actual_data.split('.csv')[0] + '_recs' + '.json'
         self.algorithm_data.to_json(path)
         print('Saved results to {0}'.format(path))
