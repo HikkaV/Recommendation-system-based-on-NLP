@@ -39,4 +39,5 @@ min_watched = 10
 workers = 8
 topn = 50
 batch_size = 1000
-ncalls = 10
+ncalls = 40
+random_seed = 5

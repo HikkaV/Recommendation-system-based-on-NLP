@@ -115,4 +115,4 @@ def define_params(args):
                    path_to_overall_data=args.path_to_overall, path_movies=args.path_to_movies,
                    path_ratings=args.path_to_ratings,
                    min_ratings=args.min_rating, min_watched=args.min_watched, fields=fields)
-    opt.minimize(ncalls)
+    opt.minimize(ncalls,seed=random_seed)
